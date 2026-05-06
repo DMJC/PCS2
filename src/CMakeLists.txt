@@ -146,9 +146,8 @@ target_include_directories(pcs2 PRIVATE ${Boost_INCLUDE_DIRS})
 
 find_package(DevIL REQUIRED)
 
-target_link_libraries(pcs2 PRIVATE ${IL_LIBRARIES} ${ILU_LIBRARIES} ${ILUT_LIBRARIES})
+target_link_libraries(pcs2 PRIVATE ${IL_LIBRARIES} ${ILU_LIBRARIES})
 target_include_directories(pcs2 PRIVATE ${IL_INCLUDE_DIR}/..)
-target_compile_definitions(pcs2 PRIVATE ILUT_USE_OPENGL)
 
 if(WIN32)
 else()
@@ -165,7 +164,10 @@ target_compile_definitions(pcs2 PRIVATE $<$<CONFIG:Debug>:${wxWidgets_DEFINITION
 
 
 IF(UNIX)
-	find_package(SDL REQUIRED)
-	target_link_libraries(pcs2 PRIVATE ${SDL_LIBRARY})
-	target_include_directories(pcs2 PRIVATE ${SDL_INCLUDE_DIR})
+	find_package(SDL2 REQUIRED)
+	target_link_libraries(pcs2 PRIVATE ${SDL2_LIBRARIES})
+	target_include_directories(pcs2 PRIVATE ${SDL2_INCLUDE_DIRS})
 endif()
+
+include(GNUInstallDirs)
+install(TARGETS pcs2 RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})

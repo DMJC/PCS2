@@ -1,9 +1,9 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.10)
 
 include(cmake/util.cmake)
 
 # Set a few policies
-set_policy(CMP0051 OLD)
+set_policy(CMP0051 NEW)
 set_policy(CMP0053 NEW)
 set_policy(CMP0054 NEW)
 set_policy(CMP0074 NEW)

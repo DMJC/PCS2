@@ -1,0 +1,13 @@
+Package: pcs2
+Version: 2.1-1
+Architecture: amd64
+Maintainer: James Carthew <jcarthew@gmail.com>
+Installed-Size: 6054
+Depends: libc6 (>= 2.38), libdevil1c2 (>= 1.7.8), libgcc-s1 (>= 3.0), libgl1, libglu1-mesa | libglu1, libstdc++6 (>= 13.1), libwxbase3.2-1t64 (>= 3.2.9+dfsg), libwxgtk-gl3.2-1t64 (>= 3.2.9+dfsg), libwxgtk3.2-1t64 (>= 3.2.9+dfsg)
+Section: games
+Priority: optional
+Homepage: https://github.com/chief1983/PCS2
+Description: Parallax/Volition POF model viewer and editor
+ PCS2 is a 3D model viewer and editor for the POF file format used by
+ the Freespace 2 game engine (and its open-source successor, FSOpen).
+ It supports viewing, editing, and converting ship and weapon models.

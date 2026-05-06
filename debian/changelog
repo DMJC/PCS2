@@ -1,0 +1,9 @@
+pcs2 (2.1-1) unstable; urgency=medium
+
+  * Initial Debian packaging.
+  * Updated CMake minimum version to 3.10 for CMake 4.x compatibility.
+  * Replaced SDL with SDL2.
+  * Replaced ilutGLBindTexImage with inline OpenGL calls (Debian libdevil
+    omits ILUT OpenGL support).
+
+ -- James Carthew <jcarthew@gmail.com>  Wed, 06 May 2026 21:58:33 +1000

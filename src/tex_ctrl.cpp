@@ -145,13 +145,28 @@
 #include "VPReader.h"
 #include <IL/il.h>
 #include <IL/ilu.h>
-#include <IL/ilut.h>
 #include <fstream>
 #include "pcs2.h"
 #include "main_panel.h"
 #include "insignia.png.h"
 
 using namespace std;
+
+// Debian's libdevil omits OpenGL support from ILUT, so implement this manually.
+// The real ilutGLBindTexImage flips the image (DevIL top-left → OpenGL bottom-left origin).
+static GLuint ilutGLBindTexImage() {
+	iluFlipImage();
+	ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
+	ILint width  = ilGetInteger(IL_IMAGE_WIDTH);
+	ILint height = ilGetInteger(IL_IMAGE_HEIGHT);
+	GLuint texId;
+	glGenTextures(1, &texId);
+	glBindTexture(GL_TEXTURE_2D, texId);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, ilGetData());
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	return texId;
+}
 
 bool load(ILenum type, const void*buf, int zero){
 #ifdef WIN32
@@ -220,7 +235,6 @@ void TextureControl::LoadTextures(PCS_Model &pf, std::vector<std::string> &paths
 	textures.resize(pf.GetTexturesCount());
 	texturenames.resize(pf.GetTexturesCount());
 
-	ilutRenderer(ILUT_OPENGL); // call this here to make sure it's called AFTER openGL init
 	//int RetVal;
 
 
