@@ -6,6 +6,7 @@
 #include "debug_window.h"
 #include <wx/glcanvas.h>
 #include <wx/clipbrd.h>
+#include <wx/timer.h>
 
 enum movement_plane{XZ_PLANE, XY_PLANE, YZ_PLANE};
 enum AXIS {X_AXIS = 0,Y_AXIS = 1,Z_AXIS = 2};
@@ -65,6 +66,8 @@ class wxGL_PMFCanvas : public wxGLCanvas
 		bool draw_the_grid;
 		bool rotate_subobjects;
 		wxLongLong last_rotation_update_ms;
+		wxTimer rotation_timer;
+		bool user_interacting;
 
 		wxGLContext* m_context;
 		bool m_opengl_init;
@@ -170,9 +173,15 @@ class wxGL_PMFCanvas : public wxGLCanvas
 			rotate_subobjects = r;
 			if (r)
 				last_rotation_update_ms = wxGetUTCTimeMillis().GetValue();
+			if (r)
+				rotation_timer.Start(16);
+			else
+				rotation_timer.Stop();
 			model.set_animate_subobject_rotation(r);
 			Render();
 		};
+
+		void on_rotation_timer(wxTimerEvent& event);
 		void set_eye_angles(const vector3d&angs){rotation=angs;Render();}
 		void set_eye_position(const vector3d&pos){position=pos;Render();}
 

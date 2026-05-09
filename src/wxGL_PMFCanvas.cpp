@@ -202,7 +202,7 @@ DEFINE_EVENT_TYPE(OMNIPOINT_RAY_PICKED)
 
 wxGL_PMFCanvas::wxGL_PMFCanvas(wxWindow* parent, main_panel* main, int id, wxPoint pos, wxSize sz, PCS_Model &ship, int *attriblist)
  : wxGLCanvas(parent, id, attriblist, pos, sz, 0, _("GLCanvas")),
-	omni_selected_list(-1), omni_selected_item(-1),model(ship),previus_focus(NULL),kShiftdown(false),FreezeRender(true), IsRendering(false), mainpanel(main), gr_debug(NULL),UI_plane(XZ_PLANE),proj_mode(PROJ_PERSP), draw_the_grid(false), rotate_subobjects(false), last_rotation_update_ms(0), m_context(nullptr), m_opengl_init(false), position(0,0,0), rotation(0,0,0)
+	omni_selected_list(-1), omni_selected_item(-1),model(ship),previus_focus(NULL),kShiftdown(false),FreezeRender(true), IsRendering(false), mainpanel(main), gr_debug(NULL),UI_plane(XZ_PLANE),proj_mode(PROJ_PERSP), draw_the_grid(false), rotate_subobjects(false), last_rotation_update_ms(0), rotation_timer(this), user_interacting(false), m_context(nullptr), m_opengl_init(false), position(0,0,0), rotation(0,0,0)
 {
 	free_axis[0]=true;
 	free_axis[1]=true;
@@ -210,6 +210,7 @@ wxGL_PMFCanvas::wxGL_PMFCanvas(wxWindow* parent, main_panel* main, int id, wxPoi
 
 	ambient_light[0]=0.1f; ambient_light[1]=0.1f; ambient_light[2]=0.1f; ambient_light[3]=1.0f;
 	diffuse_light[0]=0.9f; diffuse_light[1]=0.9f; diffuse_light[2]=0.9f; diffuse_light[3]=1.0f;
+	Bind(wxEVT_TIMER, &wxGL_PMFCanvas::on_rotation_timer, this);
 }
 
 void wxGL_PMFCanvas::Init() {
@@ -891,6 +892,8 @@ void wxGL_PMFCanvas::on_click(wxMouseEvent& event){
 
 void wxGL_PMFCanvas::OnMouseEvt(wxMouseEvent& event)
 {
+	user_interacting = event.LeftIsDown() || event.MiddleIsDown() || event.RightIsDown() || event.Dragging();
+
 	bool update_omnipoints = false;
 
 	if(event.Leaving() || event.ButtonUp()){
@@ -1089,6 +1092,14 @@ void wxGL_PMFCanvas::OnMouseEvt(wxMouseEvent& event)
 		set_omnipoints(mainpanel->control_panel->get_omnipoints());
 	}
 //	Render();
+}
+
+void wxGL_PMFCanvas::on_rotation_timer(wxTimerEvent& event)
+{
+	if (!rotate_subobjects || user_interacting || FreezeRender || IsRendering)
+		return;
+
+	Render();
 }
 
 //+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
