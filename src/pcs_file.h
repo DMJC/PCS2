@@ -334,7 +334,7 @@ class PCS_Model
 		void Rcall_Wireframe(bool tf) { Wireframe = tf; }
 		void Rcall_Textureless(bool tf) { Textureless = tf; }
 		void set_animate_subobject_rotation(bool tf) { animate_subobject_rotation = tf; }
-		void UpdateSubobjectRotationAngles();
+		void UpdateSubobjectRotationAngles(float delta_seconds);
 
 		bool draw_bsp;
 		//

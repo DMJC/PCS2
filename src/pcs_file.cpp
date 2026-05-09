@@ -1851,7 +1851,7 @@ void PCS_Model::Render(TextureControl &tc, bool use_vbos, bool highlight)
 
 }
 
-void PCS_Model::UpdateSubobjectRotationAngles()
+void PCS_Model::UpdateSubobjectRotationAngles(float delta_seconds)
 {
 	if (!animate_subobject_rotation)
 		return;
@@ -1863,14 +1863,19 @@ void PCS_Model::UpdateSubobjectRotationAngles()
 		if (subobjects[i].movement_type != ROTATE || subobjects[i].movement_axis == ANONE)
 			continue;
 
-		float speed = 1.0f;
+		// $rotate=<int> means "seconds per full 360 degree rotation".
+		float seconds_per_rotation = 60.0f;
 		size_t rotate_offset = subobjects[i].properties.find("$rotate=");
 		if (rotate_offset != std::string::npos) {
-			int parsed_speed = 0;
-			if (sscanf(subobjects[i].properties.c_str() + rotate_offset, "$rotate=%d", &parsed_speed) == 1 && parsed_speed != 0)
-				speed = (float)parsed_speed;
+			int parsed_seconds = 0;
+			if (sscanf(subobjects[i].properties.c_str() + rotate_offset, "$rotate=%d", &parsed_seconds) == 1 && parsed_seconds > 0)
+				seconds_per_rotation = (float)parsed_seconds;
 		}
-		subobject_rotation_angles[i] += speed;
+
+		const float degrees_per_second = 360.0f / seconds_per_rotation;
+		subobject_rotation_angles[i] += degrees_per_second * delta_seconds;
+		while (subobject_rotation_angles[i] >= 360.0f)
+			subobject_rotation_angles[i] -= 360.0f;
 	}
 }
 
