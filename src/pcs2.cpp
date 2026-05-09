@@ -340,6 +340,7 @@ int current_model_file;
 wxString PCS2_COMP_VERSION = _("PCS 2.0 Compiler Version 2 Final");
 
 wxString PCS2_SUPPORTED_FORMATS = _("All Supported Formats|*.cob;*.pmf;*.pof;*.scn;*.dae|Parallax Object Files (.pof)|*.pof|PCS2 Model File (.pmf)|*.pmf|Caligari Object Binary (.cob)|*.cob|Caligari Scene (.scn)|*.scn|Collada (.dae)|*.dae");
+wxString PCS2_EXPORT_FORMATS = _("All Supported Formats|*.cob;*.pmf;*.pof;*.scn;*.dae;*.blend|Parallax Object Files (.pof)|*.pof|PCS2 Model File (.pmf)|*.pmf|Caligari Object Binary (.cob)|*.cob|Caligari Scene (.scn)|*.scn|Collada (.dae)|*.dae|Blender (.blend)|*.blend");
 //op_gl_funcs GLFunctions;
 
 //this is just iceing, 
@@ -755,7 +756,7 @@ void PCS2_MainWindow::save_progbar_end(wxAsyncProgressEndEvt &event)
 void PCS2_MainWindow::File_Menu_Save(wxCommandEvent &event)
 {
 	wxFileDialog *fdlg;
-	fdlg = new wxFileDialog(this, _("Save File"), _(""), wxString(loaded_file.c_str(), wxConvUTF8), PCS2_SUPPORTED_FORMATS, wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+	fdlg = new wxFileDialog(this, _("Save File"), _(""), wxString(loaded_file.c_str(), wxConvUTF8), PCS2_EXPORT_FORMATS, wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
 	if (fdlg->ShowModal() != wxID_OK)
 		return;
 
