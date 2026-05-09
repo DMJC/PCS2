@@ -202,7 +202,7 @@ DEFINE_EVENT_TYPE(OMNIPOINT_RAY_PICKED)
 
 wxGL_PMFCanvas::wxGL_PMFCanvas(wxWindow* parent, main_panel* main, int id, wxPoint pos, wxSize sz, PCS_Model &ship, int *attriblist)
  : wxGLCanvas(parent, id, attriblist, pos, sz, 0, _("GLCanvas")),
-	omni_selected_list(-1), omni_selected_item(-1),model(ship),previus_focus(NULL),kShiftdown(false),FreezeRender(true), IsRendering(false), mainpanel(main), gr_debug(NULL),UI_plane(XZ_PLANE),proj_mode(PROJ_PERSP), draw_the_grid(false), m_context(nullptr), m_opengl_init(false), position(0,0,0), rotation(0,0,0)
+	omni_selected_list(-1), omni_selected_item(-1),model(ship),previus_focus(NULL),kShiftdown(false),FreezeRender(true), IsRendering(false), mainpanel(main), gr_debug(NULL),UI_plane(XZ_PLANE),proj_mode(PROJ_PERSP), draw_the_grid(false), rotate_subobjects(false), m_context(nullptr), m_opengl_init(false), position(0,0,0), rotation(0,0,0)
 {
 	free_axis[0]=true;
 	free_axis[1]=true;
@@ -465,6 +465,7 @@ void wxGL_PMFCanvas::Render()
 			model.set_active_model(model.LOD(omni.lod));
 		}
 	
+		model.UpdateSubobjectRotationAngles();
 		model.Render(tex_ctrl, UseVBOs, active_chunk == SOBJ);
 
 		glTranslatef(-acen.x, -acen.y, -acen.z);

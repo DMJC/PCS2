@@ -1851,6 +1851,29 @@ void PCS_Model::Render(TextureControl &tc, bool use_vbos, bool highlight)
 
 }
 
+void PCS_Model::UpdateSubobjectRotationAngles()
+{
+	if (!animate_subobject_rotation)
+		return;
+
+	if (subobject_rotation_angles.size() != subobjects.size())
+		subobject_rotation_angles.assign(subobjects.size(), 0.0f);
+
+	for (unsigned int i = 0; i < subobjects.size(); ++i) {
+		if (subobjects[i].movement_type != ROTATE || subobjects[i].movement_axis == ANONE)
+			continue;
+
+		float speed = 1.0f;
+		size_t rotate_offset = subobjects[i].properties.find("$rotate=");
+		if (rotate_offset != std::string::npos) {
+			int parsed_speed = 0;
+			if (sscanf(subobjects[i].properties.c_str() + rotate_offset, "$rotate=%d", &parsed_speed) == 1 && parsed_speed != 0)
+				speed = (float)parsed_speed;
+		}
+		subobject_rotation_angles[i] += speed;
+	}
+}
+
 //+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
 
 
@@ -1868,6 +1891,24 @@ void PCS_Model::RenderGeometryRecursive(int sobj, TextureControl &tc, bool use_v
 	ERROR_CHECK;
 
 	glTranslatef(trans.x, trans.y, trans.z);
+	if (animate_subobject_rotation && subobjects[sobj].movement_type == ROTATE && subobjects[sobj].movement_axis != ANONE) {
+		if (subobject_rotation_angles.size() != subobjects.size())
+			subobject_rotation_angles.assign(subobjects.size(), 0.0f);
+
+		switch (subobjects[sobj].movement_axis) {
+			case MV_X:
+				glRotatef(subobject_rotation_angles[sobj], 1.0f, 0.0f, 0.0f);
+				break;
+			case MV_Y:
+				glRotatef(subobject_rotation_angles[sobj], 0.0f, 1.0f, 0.0f);
+				break;
+			case MV_Z:
+				glRotatef(subobject_rotation_angles[sobj], 0.0f, 0.0f, 1.0f);
+				break;
+			default:
+				break;
+		}
+	}
 
 	// render children
 	unsigned int i;

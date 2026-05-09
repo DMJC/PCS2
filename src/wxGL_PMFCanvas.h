@@ -63,6 +63,7 @@ class wxGL_PMFCanvas : public wxGLCanvas
 		bool free_axis[3];
 		projection_mode proj_mode;
 		bool draw_the_grid;
+		bool rotate_subobjects;
 
 		wxGLContext* m_context;
 		bool m_opengl_init;
@@ -164,6 +165,7 @@ class wxGL_PMFCanvas : public wxGLCanvas
 
 		void set_projection_mode(projection_mode p){proj_mode = p;Render();};
 		void set_draw_grid(bool g){draw_the_grid = g; Render();};
+		void set_rotate_subobjects(bool r){rotate_subobjects = r; model.set_animate_subobject_rotation(r); Render();};
 		void set_eye_angles(const vector3d&angs){rotation=angs;Render();}
 		void set_eye_position(const vector3d&pos){position=pos;Render();}
 

@@ -933,6 +933,7 @@ void PCS2_MainWindow::InitMenu()
 	//projection options
     toolBar->AddSeparator();
 	ADD_TOGGLE_TOOL(PCS2_TBCTRL_GRID,		tbBitmaps[13], _("Grid"),	_("Toggle the Auto-Grid"));
+	ADD_TOGGLE_TOOL(PCS2_TBCTRL_ROTATE_SUBOBJECTS,	tbBitmaps[17], _("Rotations"), _("Toggle subobject rotation animation"));
 	
 	// Textured/Solid/Wireframe
     toolBar->AddSeparator();
@@ -1315,6 +1316,10 @@ void PCS2_MainWindow::Toolbar_grid_changed(wxCommandEvent &event){
 	mypanel->glcanvas->set_draw_grid(event.IsChecked());
 }
 
+void PCS2_MainWindow::Toolbar_rotate_subobjects_changed(wxCommandEvent &event){
+	mypanel->glcanvas->set_rotate_subobjects(event.IsChecked());
+}
+
 //the grid option was changed
 void PCS2_MainWindow::Toolbar_projection_changed(wxCommandEvent &event){
 	switch(event.GetId()){
@@ -1508,6 +1513,7 @@ BEGIN_EVENT_TABLE(PCS2_MainWindow, wxFrame)
 	EVT_MENU(PCS2_TBCTRL_LOCK_Z, PCS2_MainWindow::Toolbar_axis_changed)
 
 	EVT_MENU(PCS2_TBCTRL_GRID, PCS2_MainWindow::Toolbar_grid_changed)
+	EVT_MENU(PCS2_TBCTRL_ROTATE_SUBOBJECTS, PCS2_MainWindow::Toolbar_rotate_subobjects_changed)
 
 	EVT_MENU(PCS2_TBCTRL_PROJ_ORTHO, PCS2_MainWindow::Toolbar_projection_changed)
 	EVT_MENU(PCS2_TBCTRL_PROJ_PERSP, PCS2_MainWindow::Toolbar_projection_changed)
