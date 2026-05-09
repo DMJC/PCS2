@@ -99,6 +99,8 @@
 #include "pcs2.h"
 //#include <GL/gl.h>
 #include <GL/glu.h>
+#include <cstdlib>
+#include <cstdio>
 
 
 wxPCS2SaveThread::wxPCS2SaveThread(PCS_Model* ship, std::string filename, AsyncProgress* _progress) 
@@ -216,6 +218,38 @@ void *wxPCS2SaveThread::Entry()
 			}
 		}
 	}*/
+	else if (strstr(comp.c_str(), ".blend") != NULL)
+	{
+		const std::string temp_dae = selfile + ".pcs2_tmp_export.dae";
+
+		// get helper settings from config
+		int helpers, props_as_helpers;
+		wxConfigBase *pConfig = wxConfigBase::Get();
+		pConfig->SetPath(_T("/collada_options/"));
+		pConfig->Read(_("export_helpers"), &helpers, 1);
+		pConfig->Read(_("export_properties_as_helpers"), &props_as_helpers, 0);
+
+		err = model->SaveToDAE(temp_dae, progress, helpers, props_as_helpers);
+		if (err != 0)
+		{
+			progress->setError(err);
+			progress->EarlyTerminate();
+			progress->setMessage("Failed to export intermediate Collada file for Blender export");
+		}
+		else
+		{
+			std::string cmd = "blender --background --factory-startup --python-expr \"import bpy; bpy.ops.wm.read_factory_settings(use_empty=True); bpy.ops.wm.collada_import(filepath='" + temp_dae + "'); bpy.ops.wm.save_as_mainfile(filepath='" + selfile + "')\"";
+			int blender_result = std::system(cmd.c_str());
+			std::remove(temp_dae.c_str());
+			if (blender_result != 0)
+			{
+				progress->setError(1);
+				progress->EarlyTerminate();
+				progress->setMessage("Blender export failed. Make sure 'blender' is available on PATH.");
+			}
+		}
+
+	}
 	else if (strstr(comp.c_str(), ".dae") != NULL)
 	{
 		// get helper settings from config
