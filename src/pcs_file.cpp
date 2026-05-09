@@ -1862,6 +1862,8 @@ void PCS_Model::UpdateSubobjectRotationAngles(float delta_seconds)
 	for (unsigned int i = 0; i < subobjects.size(); ++i) {
 		if (subobjects[i].movement_type != ROTATE || subobjects[i].movement_axis == ANONE)
 			continue;
+		if (subobjects[i].properties.find("$rotate=") == std::string::npos)
+			continue;
 
 		// $rotate=<int> means "seconds per full 360 degree rotation".
 		float seconds_per_rotation = 60.0f;
@@ -1896,7 +1898,8 @@ void PCS_Model::RenderGeometryRecursive(int sobj, TextureControl &tc, bool use_v
 	ERROR_CHECK;
 
 	glTranslatef(trans.x, trans.y, trans.z);
-	if (animate_subobject_rotation && subobjects[sobj].movement_type == ROTATE && subobjects[sobj].movement_axis != ANONE) {
+	if (animate_subobject_rotation && subobjects[sobj].movement_type == ROTATE && subobjects[sobj].movement_axis != ANONE &&
+		subobjects[sobj].properties.find("$rotate=") != std::string::npos) {
 		if (subobject_rotation_angles.size() != subobjects.size())
 			subobject_rotation_angles.assign(subobjects.size(), 0.0f);
 

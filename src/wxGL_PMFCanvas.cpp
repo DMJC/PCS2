@@ -469,7 +469,7 @@ void wxGL_PMFCanvas::Render()
 		wxLongLong now_ms = wxGetUTCTimeMillis().GetValue();
 		float delta_seconds = 0.0f;
 		if (last_rotation_update_ms > 0) {
-			delta_seconds = float(now_ms.ToLongLong() - last_rotation_update_ms.ToLongLong()) / 1000.0f;
+			delta_seconds = float(now_ms.ToLong() - last_rotation_update_ms.ToLong()) / 1000.0f;
 		}
 		last_rotation_update_ms = now_ms;
 		model.UpdateSubobjectRotationAngles(delta_seconds);
