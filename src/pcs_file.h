@@ -291,6 +291,8 @@ class PCS_Model
 		bool Textureless;
 		bool highlight_active_model;
 		bool vbos_enabled;
+		bool animate_subobject_rotation;
+		std::vector<float> subobject_rotation_angles;
 
 
 
@@ -318,7 +320,7 @@ class PCS_Model
 		vector3d OffsetFromParent(int ObjNum);
 		void Transform(const matrix& transform, const vector3d& translation);
 
-		PCS_Model() : header(), can_bsp_cache(false), has_fullsmoothing_data(false), active_submodel(0), Wireframe(false), Textureless(false), vbos_enabled(false), draw_bsp(false)
+		PCS_Model() : header(), can_bsp_cache(false), has_fullsmoothing_data(false), active_submodel(0), Wireframe(false), Textureless(false), highlight_active_model(false), vbos_enabled(false), animate_subobject_rotation(false), draw_bsp(false)
 		{
 
 		}
@@ -331,6 +333,8 @@ class PCS_Model
 		// Renderer commands
 		void Rcall_Wireframe(bool tf) { Wireframe = tf; }
 		void Rcall_Textureless(bool tf) { Textureless = tf; }
+		void set_animate_subobject_rotation(bool tf) { animate_subobject_rotation = tf; }
+		void UpdateSubobjectRotationAngles(float delta_seconds);
 
 		bool draw_bsp;
 		//
@@ -626,4 +630,3 @@ class PCS_Model
 
 
 #endif //_pcs_file_h_
-

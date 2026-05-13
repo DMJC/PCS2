@@ -380,6 +380,7 @@ class PCS2_MainWindow : public wxFrame
 		void Toolbar_projection_changed(wxCommandEvent &event);
 
 		void Toolbar_grid_changed(wxCommandEvent &event);
+		void Toolbar_rotate_subobjects_changed(wxCommandEvent &event);
 
 		void Toolbar_OnTextured(wxCommandEvent &event);
 		void Toolbar_OnWireframe(wxCommandEvent &event);
